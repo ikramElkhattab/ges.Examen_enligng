@@ -20,10 +20,10 @@ import javax.persistence.Table;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String nom;
-    private String email;
-    private String motDePasse;
+    protected int id;
+    protected String nom;
+    protected String email;
+    protected String motDePasse;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Resultat>resultats;
 

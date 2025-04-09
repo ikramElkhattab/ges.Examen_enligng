@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package test;
 
 import dao.EtudiantDao;
@@ -13,64 +8,92 @@ import entites.Etudiant;
 import entites.Examen;
 import entites.Matiere;
 import entites.Resultat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import util.HibernateUtil;
+import org.hibernate.Session;
 
-/**
- *
- * @author hp
- */
 public class Test {
 
     public static void main(String[] args) {
-        // Initialisation de Hibernate
-        HibernateUtil.getSessionFactory();
-        // Test MatiereDao
-        MatiereDao matiereDao = new MatiereDao();
-        Matiere matiere = new Matiere("Mathematics");
-        matiereDao.create(matiere);
-        System.out.println("Matière créée : " + matiere.getNom());
+        // Open a Hibernate session
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
         
-        // Test EtudiantDao
-        EtudiantDao etudiantDao = new EtudiantDao(); 
-        
-        // Remplacez par des valeurs appropriées
-        Date dateNaissance = new Date(); // Utilisez une date spécifique si nécessaire
-        String nom = "John Doe";
-        String email = "john.doe@example.com";
-        String motDePasse = "securePassword";
+        try {
+            
+            MatiereDao matiereDao = new MatiereDao();
+            EtudiantDao etudiantDao = new EtudiantDao();
+            ExamenDao examenDao = new ExamenDao();
+            ResultatDao resultatDao = new ResultatDao();
 
-        // Initialisation de l'étudiant avec tous les paramètres
-        Etudiant etudiant = new Etudiant(dateNaissance, nom, email, motDePasse);
-        
-        // Sauvegarde de l'étudiant
-        etudiantDao.create(etudiant); 
-        System.out.println("Étudiant créé : " + etudiant.getNom());
+            
+            List<Matiere> matieres = new ArrayList<>();
+            matieres.add(new Matiere("Mathematics"));
+            matieres.add(new Matiere("Physics"));
+            matieres.add(new Matiere("Chemistry"));
 
+          
+            for (Matiere matiere : matieres) {
+                matiereDao.create(matiere);
+                System.out.println("Matière créée : " + matiere.getNom());
+            }
 
-        // Test ExamenDao
-        ExamenDao examenDao = new ExamenDao();
-        int durée = 120;
-        Examen examen = new Examen("Examen de Mathématiques", durée, matiere);
-        examenDao.create(examen);
-        System.out.println("Examen créé : " + examen.getTitre());
-        
-       // Test ResultatDao
-        ResultatDao resultatDao = new ResultatDao();
-        Float note = 85.0f; // Note pour le résultat
-        Resultat resultat = new Resultat(note, examen, etudiant); // Utilisez etudiant ici
-        resultatDao.create(resultat);
-        System.out.println("Résultat créé : " + resultat.getNote() + " pour l'examen " + examen.getTitre());
-        // Affichage des examens associés à une matière
-        System.out.println("Examens pour la matière " + matiere.getNom() + ":");
-        for (Examen ex : matiereDao.findById(matiere.getId()).getExamens()) {
-            System.out.println(ex.getTitre());
+            
+            List<Etudiant> etudiants = new ArrayList<>();
+            etudiants.add(new Etudiant(new Date(), "John Doe", "john.doe@example.com", "securePassword"));
+            etudiants.add(new Etudiant(new Date(), "Jane Smith", "jane.smith@example.com", "securePassword123"));
+            etudiants.add(new Etudiant(new Date(), "Alice Johnson", "alice.johnson@example.com", "password456"));
+
+            for (Etudiant etudiant : etudiants) {
+                etudiantDao.create(etudiant);
+                System.out.println("Étudiant créé : " + etudiant.getNom());
+            }
+
+            // Create and save exams
+            List<Examen> examens = new ArrayList<>();
+            examens.add(new Examen("Test Mathématiques", 120, matieres.get(0)));
+            examens.add(new Examen("Test Physique", 90, matieres.get(1)));
+            examens.add(new Examen("Test Chimie", 150, matieres.get(2)));
+
+            for (Examen examen : examens) {
+                examenDao.create(examen);
+                System.out.println("Examen créé : " + examen.getTitre());
+            }
+
+           
+            for (Etudiant etudiant : etudiants) {
+                for (Examen examen : examens) {
+                    Float note = (float) (Math.random() * 100); 
+                    Resultat resultat = new Resultat(note, examen, etudiant);
+                    resultatDao.create(resultat);
+                    System.out.println("Résultat créé : " + resultat.getNote() + " pour l'examen " + examen.getTitre());
+                }
+            }
+
+            // Filtrage des examens par durée
+            System.out.println("Examens d'une durée supérieure à 100 minutes :");
+            for (Examen examen : examens) {
+                if (examen.getDurée() > 100) {
+                    System.out.println(examen.getTitre());
+                }
+            }
+
+            // Filtrage des résultats par note
+            System.out.println("Résultats supérieurs à 50 :");
+            for (Resultat resultat : resultatDao.findAll()) {
+                if (resultat.getNote() > 50) {
+                    System.out.println("Note : " + resultat.getNote() + " pour l'examen " + resultat.getExamen().getTitre());
+                }
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
-        // Nettoyage
-        resultatDao.delete(resultat);
-        examenDao.delete(examen);
-        matiereDao.delete(matiere);
-         etudiantDao.delete(etudiant);
-
     }
 }
