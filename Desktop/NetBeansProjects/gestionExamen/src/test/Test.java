@@ -8,6 +8,7 @@ import entites.Etudiant;
 import entites.Examen;
 import entites.Matiere;
 import entites.Resultat;
+import entites.ResultatID;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,25 +23,24 @@ public class Test {
         session.beginTransaction();
         
         try {
-            
+            // Initialize DAOs
             MatiereDao matiereDao = new MatiereDao();
             EtudiantDao etudiantDao = new EtudiantDao();
             ExamenDao examenDao = new ExamenDao();
             ResultatDao resultatDao = new ResultatDao();
 
-            
+            // Create and save subjects
             List<Matiere> matieres = new ArrayList<>();
             matieres.add(new Matiere("Mathematics"));
             matieres.add(new Matiere("Physics"));
             matieres.add(new Matiere("Chemistry"));
 
-          
             for (Matiere matiere : matieres) {
                 matiereDao.create(matiere);
                 System.out.println("Matière créée : " + matiere.getNom());
             }
 
-            
+            // Create and save students
             List<Etudiant> etudiants = new ArrayList<>();
             etudiants.add(new Etudiant(new Date(), "John Doe", "john.doe@example.com", "securePassword"));
             etudiants.add(new Etudiant(new Date(), "Jane Smith", "jane.smith@example.com", "securePassword123"));
@@ -62,11 +62,14 @@ public class Test {
                 System.out.println("Examen créé : " + examen.getTitre());
             }
 
-           
+            // Create and save results using ResultatID
             for (Etudiant etudiant : etudiants) {
                 for (Examen examen : examens) {
                     Float note = (float) (Math.random() * 100); 
-                    Resultat resultat = new Resultat(note, examen, etudiant);
+                    ResultatID resultatID = new ResultatID(examen.getId(), etudiant.getId());
+                    Resultat resultat = new Resultat();
+                    resultat.setId(resultatID);
+                    resultat.setNote(note);
                     resultatDao.create(resultat);
                     System.out.println("Résultat créé : " + resultat.getNote() + " pour l'examen " + examen.getTitre());
                 }
@@ -88,6 +91,7 @@ public class Test {
                 }
             }
 
+            // Commit transaction
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
