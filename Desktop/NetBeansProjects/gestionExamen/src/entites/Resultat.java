@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "resultats")
 public class Resultat {
 
-    @Id
+   
     private Float note;
     @EmbeddedId
     private ResultatID id;

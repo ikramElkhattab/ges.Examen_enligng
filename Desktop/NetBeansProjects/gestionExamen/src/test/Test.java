@@ -21,7 +21,7 @@ public class Test {
         // Open a Hibernate session
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        
+
         try {
             // Initialize DAOs
             MatiereDao matiereDao = new MatiereDao();
@@ -65,7 +65,7 @@ public class Test {
             // Create and save results using ResultatID
             for (Etudiant etudiant : etudiants) {
                 for (Examen examen : examens) {
-                    Float note = (float) (Math.random() * 100); 
+                    Float note = (float) (Math.random() * 100);
                     ResultatID resultatID = new ResultatID(examen.getId(), etudiant.getId());
                     Resultat resultat = new Resultat();
                     resultat.setId(resultatID);
@@ -87,7 +87,11 @@ public class Test {
             System.out.println("Résultats supérieurs à 50 :");
             for (Resultat resultat : resultatDao.findAll()) {
                 if (resultat.getNote() > 50) {
-                    System.out.println("Note : " + resultat.getNote() + " pour l'examen " + resultat.getExamen().getTitre());
+                    if (resultat.getExamen() != null) {
+                        System.out.println("Note : " + resultat.getNote() + " pour l'examen " + resultat.getExamen().getTitre());
+                    } else {
+                        System.out.println("Note : " + resultat.getNote() + " pour un examen non défini");
+                    }
                 }
             }
 
