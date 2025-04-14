@@ -18,17 +18,19 @@ public class Resultat {
     @ManyToOne(fetch = FetchType.EAGER)
     private Examen examen;
     @ManyToOne(fetch = FetchType.EAGER)
-    private User user;
+    private Etudiant etudiant;
 
     public Resultat() {
     }
 
-    public Resultat(ResultatID id, Float note, Examen examen, User user) {
-        this.id = id;
+    public Resultat(Float note, ResultatID id, Examen examen, Etudiant etudiant) {
         this.note = note;
+        this.id = id;
         this.examen = examen;
-        this.user = user;
+        this.etudiant = etudiant;
     }
+
+  
 
     public ResultatID getId() {
         return id;
@@ -54,11 +56,13 @@ public class Resultat {
         this.examen = examen;
     }
 
-    public User getUser() {
-        return user;
+    public Etudiant getEtudiant() {
+        return etudiant;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setEtudiant(Etudiant etudiant) {
+        this.etudiant = etudiant;
     }
+
+   
 }

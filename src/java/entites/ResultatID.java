@@ -16,15 +16,17 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ResultatID implements Serializable {
     private int examenId;
-    private int userId;
+    private int etudiantId;
 
     public ResultatID() {
     }
 
-    public ResultatID(int examenId, int userId) {
+    public ResultatID(int examenId, int etudiantId) {
         this.examenId = examenId;
-        this.userId = userId;
+        this.etudiantId = etudiantId;
     }
+
+    
 
     public int getExamenId() {
         return examenId;
@@ -34,13 +36,15 @@ public class ResultatID implements Serializable {
         this.examenId = examenId;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getEtudiantId() {
+        return etudiantId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setEtudiantId(int etudiantId) {
+        this.etudiantId = etudiantId;
     }
+
+    
 
     @Override
     public boolean equals(Object o) {
@@ -48,11 +52,11 @@ public class ResultatID implements Serializable {
         if (!(o instanceof ResultatID)) return false;
         ResultatID that = (ResultatID) o;
         return Objects.equals(examenId, that.examenId) &&
-               Objects.equals(userId, that.userId);
+               Objects.equals(etudiantId, that.etudiantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(examenId, userId);
+        return Objects.hash(examenId, etudiantId);
     }
 }
