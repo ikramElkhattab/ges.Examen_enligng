@@ -2,6 +2,7 @@
 package entites;
 
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -28,6 +29,11 @@ public class Admin extends User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{" + "role=" + role + '}';
     }
      
 }

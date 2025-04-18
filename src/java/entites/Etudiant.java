@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
 })
 @NamedNativeQuery(
     name = "findExamenByUserId",  
-    query = "SELECT e.* FROM examens e INNER JOIN resultats r ON e.id = r.examen_id WHERE r.user_id = :id",
+    query = "SELECT e.* FROM examens e INNER JOIN resultats r ON e.id = r.examen_id WHERE r.etudiant_id = :id",
     resultClass = Examen.class
 )
 
@@ -58,6 +58,11 @@ public class Etudiant extends User {
 
     public void setExamens(List<Examen> examens) {
         this.examens = examens;
+    }
+
+    @Override
+    public String toString() {
+        return "Etudiant{" + "dateNaissance=" + dateNaissance + ", examens=" + examens + '}';
     }
 
 }

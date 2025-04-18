@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "examens")
-
 public class Examen {
 
     @Id
@@ -22,16 +21,18 @@ public class Examen {
     private int id;
     private String titre;
     private int durée;
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY) // Changer en Lazy si nécessaire
     private Matiere matiere;
+
     @OneToMany(mappedBy = "examen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Resultat> resultats;
+
     @ManyToOne
     @JoinColumn(name = "etudiant_id")
     private Etudiant etudiant;
 
-    public Examen() {
-    }
+    public Examen() {}
 
     public Examen(String titre, int durée, Matiere matiere) {
         this.titre = titre;
@@ -45,8 +46,16 @@ public class Examen {
         this.matiere = matiere;
         this.etudiant = etudiant;
     }
-    
 
+    public Examen(String titre, int durée, Matiere matiere, List<Resultat> resultats, Etudiant etudiant) {
+        this.titre = titre;
+        this.durée = durée;
+        this.matiere = matiere;
+        this.resultats = resultats;
+        this.etudiant = etudiant;
+    }
+
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -79,22 +88,6 @@ public class Examen {
         this.matiere = matiere;
     }
 
-    public Etudiant getEtudiant() {
-        return etudiant;
-    }
-
-    public Examen(String titre, int durée, Matiere matiere, List<Resultat> resultats, Etudiant etudiant) {
-        this.titre = titre;
-        this.durée = durée;
-        this.matiere = matiere;
-        this.resultats = resultats;
-        this.etudiant = etudiant;
-    }
-
-    public void setEtudiant(Etudiant etudiant) {
-        this.etudiant = etudiant;
-    }
-
     public List<Resultat> getResultats() {
         return resultats;
     }
@@ -103,4 +96,16 @@ public class Examen {
         this.resultats = resultats;
     }
 
+    public Etudiant getEtudiant() {
+        return etudiant;
+    }
+
+    public void setEtudiant(Etudiant etudiant) {
+        this.etudiant = etudiant;
+    }
+
+    @Override
+    public String toString() {
+        return "Examen{id=" + id + ", titre='" + titre + "', durée=" + durée + ", matiere=" + matiere + "}";
+    }
 }

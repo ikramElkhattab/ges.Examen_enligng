@@ -1,16 +1,12 @@
 
 package entites;
 
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,9 +20,7 @@ public class User {
     protected String nom;
     protected String email;
     protected String motDePasse;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Resultat>resultats;
-
+    
     public User() {
     }
 
@@ -68,12 +62,5 @@ public class User {
         this.motDePasse = motDePasse;
     }
 
-    public List<Resultat> getResultats() {
-        return resultats;
-    }
-
-    public void setResultats(List<Resultat> resultats) {
-        this.resultats = resultats;
-    }
-    
+   
 }
