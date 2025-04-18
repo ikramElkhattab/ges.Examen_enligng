@@ -4,98 +4,68 @@
     Author     : hp
 --%>
 
+<%@page import="entites.Admin, entites.Etudiant, entites.User" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Connexion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Connexion - Gestion des Examens</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-color: #f8f9fa;
         }
         .login-container {
-            background: white;
+            max-width: 400px;
+            margin: 100px auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
-        input[type="email"], 
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
+            background: white;
             border-radius: 5px;
-            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #5cb85c;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn:hover {
-            background-color: #4cae4c;
-        }
-        p {
+        .create-account {
             text-align: center;
-            color: #777;
-        }
-        .error-message {
-            color: red;
-            margin-top: 10px;
-            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Connexion</h2>
-        <form action="login" method="post">
-            <div class="form-group">
-                <label for="email">Email :</label>
-                <input type="email" id="email" name="email" required placeholder="Entrez votre email">
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center mb-4">Connexion</h2>
+            
+            <% if (request.getAttribute("erreur") != null) { %>
+                <div class="alert alert-danger">
+                    <%= request.getAttribute("erreur") %>
+                </div>
+            <% } %>
+             <%-- Section pour afficher le message de déconnexion réussie --%>
+            <% if (request.getParameter("logout") != null) { %>
+                <div class="alert alert-success">
+                    Vous avez été déconnecté avec succès.
+                </div>
+            <% } %>
+            
+            <form action="LoginController" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="motDePasse" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="motDePasse" name="motDePasse" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+            </form>
+            
+            <div class="create-account">
+                <p>Nouveau Etudiant ? <a href="register.jsp">Créer un compte</a></p>
+                
             </div>
-            <div class="form-group">
-                <label for="motDePasse">Mot de passe :</label>
-                <input type="password" id="motDePasse" name="motDePasse" required placeholder="Entrez votre mot de passe">
-            </div>
-            <button type="submit" class="btn">Se connecter</button>
-            <p>Pas encore inscrit ? <a href="register.jsp">Inscrivez-vous ici</a></p>
-        </form>
-
-        <!-- Affichage des erreurs -->
-        <c:if test="${not empty erreur}">
-            <div class="error-message">
-                <p>${erreur}</p>
-            </div>
-        </c:if>
+        </div>
     </div>
 </body>
 </html>

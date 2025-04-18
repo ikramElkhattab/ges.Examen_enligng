@@ -5,56 +5,77 @@
  */
 package services;
 
+import dao.EtudiantDao;
 import entites.Etudiant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.HibernateUtil;
 
 /**
  *
  * @author hp
  */
-public class EtudiantService{
-    private Map<Integer, Etudiant> etudiants = new HashMap<>();
-    private int nextId = 1;
-    
+public class EtudiantService implements IService<Etudiant> {
+
+    private final EtudiantDao ed;
+
     public EtudiantService() {
-        // Ajouter quelques étudiants de test
-        Etudiant e1 = new Etudiant();
-        e1.setId(nextId++);
-        e1.setNom("Dupont Jean");
-        e1.setEmail("jean.dupont@example.com");
-        e1.setMotDePasse("Jean123");
-        
-        Etudiant e2 = new Etudiant();
-        e2.setId(nextId++);
-        e2.setNom("Martin Sophie");
-        e2.setEmail("sophie.martin@example.com");
-        e2.setMotDePasse("Sophie123");
-        
-        etudiants.put(e1.getId(), e1);
-        etudiants.put(e2.getId(), e2);
+        this.ed = new EtudiantDao();
     }
-    
-    public List<Etudiant> getAllEtudiants() {
-        return new ArrayList<>(etudiants.values());
+
+    @Override
+    public boolean create(Etudiant o) {
+        return ed.create(o);
     }
-    
-    public Etudiant getEtudiantById(int id) {
-        return etudiants.get(id);
+
+    @Override
+    public boolean update(Etudiant o) {
+        return ed.update(o);
     }
-    
-    public void saveEtudiant(Etudiant etudiant) {
-        etudiant.setId(nextId++);
-        etudiants.put(etudiant.getId(), etudiant);
+
+    @Override
+    public boolean delete(Etudiant o) {
+        return ed.delete(o);
     }
-    
-    public void updateEtudiant(Etudiant etudiant) {
-        etudiants.put(etudiant.getId(), etudiant);
+
+    @Override
+    public List<Etudiant> findAll() {
+        return ed.findAll();
     }
-    
-    public void deleteEtudiant(int id) {
-        etudiants.remove(id);
+
+    @Override
+    public Etudiant findById(int id) {
+        return ed.findById(id);
+
     }
+
+    public Etudiant findByEmail(String email) {
+        Session session = null;
+        Transaction tx = null;
+        Etudiant etudiant = null;
+
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+
+            etudiant = (Etudiant) session
+                    .getNamedQuery("Etudiant.findByEmail")
+                    .setParameter("email", email)
+                    .uniqueResult();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return etudiant;
+    }
+
 }

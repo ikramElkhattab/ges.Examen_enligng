@@ -1,83 +1,77 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package services;
 
-import entites.Admin;
-import entites.Etudiant;
+import dao.UserDao;
 import entites.User;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.HibernateUtil;
 
 /**
- * Service qui gère les opérations liées aux utilisateurs - Version sans JPA
+ *
+ * @author hp
  */
-public class UserService {
-    
-    // Stockage temporaire des utilisateurs en mémoire
-    private Map<String, User> users = new HashMap<>();
-    private Map<Integer, User> usersById = new HashMap<>();
-    
+public class UserService implements IService<User> {
+
+    private final UserDao ud;
+
     public UserService() {
-        // Créer des utilisateurs de test
-        Admin admin = new Admin();
-        admin.setId(1);
-        admin.setEmail("admin@example.com");
-        admin.setMotDePasse("admin123");
-        admin.setNom("Admin");
-      
-        
-        Etudiant etudiant = new Etudiant();
-        etudiant.setId(2);
-        etudiant.setEmail("etudiant@example.com");
-        etudiant.setMotDePasse("etudiant123");
-        etudiant.setNom("Etudiant");
-       
-        
-        // Ajouter les utilisateurs aux maps
-        users.put(admin.getEmail(), admin);
-        users.put(etudiant.getEmail(), etudiant);
-        usersById.put(admin.getId(), admin);
-        usersById.put(etudiant.getId(), etudiant);
+        this.ud = new UserDao();
     }
+
+    @Override
+    public boolean create(User o) {
+        return ud.create(o);
+    }
+
+    @Override
+    public boolean update(User o) {
+        return ud.update(o);
+    }
+
+    @Override
+    public boolean delete(User o) {
+        return ud.delete(o);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return ud.findAll();
+    }
+
+    @Override
+    public User findById(int id) {
+        return ud.findById(id);
+    }
+
+    public User findByEmail(String email) {
+    Session session = null;
+    Transaction tx = null;
+    User user = null;
+
+    try {
+        session = HibernateUtil.getSessionFactory().openSession();
+        tx = session.beginTransaction();
+
+        user = (User) session
+                .getNamedQuery("User.findByEmail")
+                .setParameter("email", email)
+                .uniqueResult();
+
+        tx.commit();
+    } catch (Exception e) {
+        if (tx != null) tx.rollback();
+    } finally {
+        if (session != null) session.close();
+    }
+
+    return user;
+}
+
     
-    /**
-     * Authentifie un utilisateur par email et mot de passe
-     * @param email Email de l'utilisateur
-     * @param motDePasse Mot de passe de l'utilisateur
-     * @return User si authentifié, null sinon
-     */
-    public User authenticate(String email, String motDePasse) {
-        User user = users.get(email);
-        
-        if (user != null && user.getMotDePasse().equals(motDePasse)) {
-            return user;
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Récupère un utilisateur par son ID
-     * @param id ID de l'utilisateur
-     * @return User trouvé ou null
-     */
-    public User getUserById(int id) {
-        return usersById.get(id);
-    }
-    
-    /**
-     * Vérifie si un utilisateur est un Admin
-     * @param user Utilisateur à vérifier
-     * @return true si c'est un Admin, false sinon
-     */
-    public boolean isAdmin(User user) {
-        return user instanceof Admin;
-    }
-    
-    /**
-     * Vérifie si un utilisateur est un Etudiant
-     * @param user Utilisateur à vérifier
-     * @return true si c'est un Etudiant, false sinon
-     */
-    public boolean isEtudiant(User user) {
-        return user instanceof Etudiant;
-    }
 }

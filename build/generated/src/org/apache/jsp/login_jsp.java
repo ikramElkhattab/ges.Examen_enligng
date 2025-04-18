@@ -3,6 +3,9 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import entites.Admin;
+import entites.Etudiant;
+import entites.User;
 
 public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
@@ -11,20 +14,10 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
 
   private static java.util.List<String> _jspx_dependants;
 
-  private org.apache.jasper.runtime.TagHandlerPool _jspx_tagPool_c_if_test;
-
   private org.glassfish.jsp.api.ResourceInjector _jspx_resourceInjector;
 
   public java.util.List<String> getDependants() {
     return _jspx_dependants;
-  }
-
-  public void _jspInit() {
-    _jspx_tagPool_c_if_test = org.apache.jasper.runtime.TagHandlerPool.getTagHandlerPool(getServletConfig());
-  }
-
-  public void _jspDestroy() {
-    _jspx_tagPool_c_if_test.release();
   }
 
   public void _jspService(HttpServletRequest request, HttpServletResponse response)
@@ -56,38 +49,79 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("\n");
       out.write("<!DOCTYPE html>\n");
-      out.write("<html lang=\"fr\">\n");
+      out.write("<html>\n");
       out.write("<head>\n");
       out.write("    <meta charset=\"UTF-8\">\n");
-      out.write("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
-      out.write("    <title>Page de Connexion</title>\n");
-      out.write("    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css\">\n");
-      out.write("    <link rel=\"stylesheet\" href=\"styles.css\">\n");
+      out.write("    <title>Connexion - Gestion des Formations</title>\n");
+      out.write("    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\">\n");
+      out.write("    <style>\n");
+      out.write("        body {\n");
+      out.write("            background-color: #f8f9fa;\n");
+      out.write("        }\n");
+      out.write("        .login-container {\n");
+      out.write("            max-width: 400px;\n");
+      out.write("            margin: 100px auto;\n");
+      out.write("            padding: 20px;\n");
+      out.write("            background: white;\n");
+      out.write("            border-radius: 5px;\n");
+      out.write("            box-shadow: 0 0 10px rgba(0,0,0,0.1);\n");
+      out.write("        }\n");
+      out.write("        .create-account {\n");
+      out.write("            text-align: center;\n");
+      out.write("            margin-top: 20px;\n");
+      out.write("            padding-top: 15px;\n");
+      out.write("            border-top: 1px solid #eee;\n");
+      out.write("        }\n");
+      out.write("    </style>\n");
       out.write("</head>\n");
       out.write("<body>\n");
-      out.write("    <div class=\"login-container\">\n");
-      out.write("        <h2>Connexion</h2>\n");
-      out.write("        <form action=\"login\" method=\"post\">\n");
-      out.write("            <div class=\"form-group\">\n");
-      out.write("                <label for=\"email\">Email :</label>\n");
-      out.write("                <input type=\"email\" id=\"email\" name=\"email\" required placeholder=\"Entrez votre email\">\n");
-      out.write("            </div>\n");
-      out.write("            <div class=\"form-group\">\n");
-      out.write("                <label for=\"motDePasse\">Mot de passe :</label>\n");
-      out.write("                <input type=\"password\" id=\"motDePasse\" name=\"motDePasse\" required placeholder=\"Entrez votre mot de passe\">\n");
-      out.write("            </div>\n");
-      out.write("            <button type=\"submit\" class=\"btn\">Se connecter</button>\n");
-      out.write("            <p>Pas encore inscrit ? <a href=\"register.jsp\">Inscrivez-vous ici</a></p>\n");
-      out.write("        </form>\n");
+      out.write("    <div class=\"container\">\n");
+      out.write("        <div class=\"login-container\">\n");
+      out.write("            <h2 class=\"text-center mb-4\">Connexion</h2>\n");
+      out.write("            \n");
+      out.write("            ");
+ if (request.getAttribute("erreur") != null) { 
       out.write("\n");
-      out.write("        <!-- Affichage des erreurs -->\n");
-      out.write("        ");
-      if (_jspx_meth_c_if_0(_jspx_page_context))
-        return;
+      out.write("                <div class=\"alert alert-danger\">\n");
+      out.write("                    ");
+      out.print( request.getAttribute("erreur") );
       out.write("\n");
+      out.write("                </div>\n");
+      out.write("            ");
+ } 
+      out.write("\n");
+      out.write("             ");
+      out.write("\n");
+      out.write("            ");
+ if (request.getParameter("logout") != null) { 
+      out.write("\n");
+      out.write("                <div class=\"alert alert-success\">\n");
+      out.write("                    Vous avez été déconnecté avec succès.\n");
+      out.write("                </div>\n");
+      out.write("            ");
+ } 
+      out.write("\n");
+      out.write("            \n");
+      out.write("            <form action=\"LoginController\" method=\"post\">\n");
+      out.write("                <div class=\"mb-3\">\n");
+      out.write("                    <label for=\"email\" class=\"form-label\">Email</label>\n");
+      out.write("                    <input type=\"email\" class=\"form-control\" id=\"email\" name=\"email\" required>\n");
+      out.write("                </div>\n");
+      out.write("                <div class=\"mb-3\">\n");
+      out.write("                    <label for=\"motDePasse\" class=\"form-label\">Mot de passe</label>\n");
+      out.write("                    <input type=\"password\" class=\"form-control\" id=\"motDePasse\" name=\"motDePasse\" required>\n");
+      out.write("                </div>\n");
+      out.write("                <button type=\"submit\" class=\"btn btn-primary w-100\">Se connecter</button>\n");
+      out.write("            </form>\n");
+      out.write("            \n");
+      out.write("            <div class=\"create-account\">\n");
+      out.write("                <p>Nouveau Etudiant ? <a href=\"register.jsp\">Créer un compte</a></p>\n");
+      out.write("                \n");
+      out.write("            </div>\n");
+      out.write("        </div>\n");
       out.write("    </div>\n");
       out.write("</body>\n");
-      out.write("</html>\n");
+      out.write("</html>");
     } catch (Throwable t) {
       if (!(t instanceof SkipPageException)){
         out = _jspx_out;
@@ -99,37 +133,5 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
     } finally {
       _jspxFactory.releasePageContext(_jspx_page_context);
     }
-  }
-
-  private boolean _jspx_meth_c_if_0(PageContext _jspx_page_context)
-          throws Throwable {
-    PageContext pageContext = _jspx_page_context;
-    JspWriter out = _jspx_page_context.getOut();
-    //  c:if
-    org.apache.taglibs.standard.tag.rt.core.IfTag _jspx_th_c_if_0 = (org.apache.taglibs.standard.tag.rt.core.IfTag) _jspx_tagPool_c_if_test.get(org.apache.taglibs.standard.tag.rt.core.IfTag.class);
-    _jspx_th_c_if_0.setPageContext(_jspx_page_context);
-    _jspx_th_c_if_0.setParent(null);
-    _jspx_th_c_if_0.setTest(((java.lang.Boolean) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${not empty erreur}", java.lang.Boolean.class, (PageContext)_jspx_page_context, null)).booleanValue());
-    int _jspx_eval_c_if_0 = _jspx_th_c_if_0.doStartTag();
-    if (_jspx_eval_c_if_0 != javax.servlet.jsp.tagext.Tag.SKIP_BODY) {
-      do {
-        out.write("\n");
-        out.write("            <div class=\"error-message\">\n");
-        out.write("                <p>");
-        out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${erreur}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-        out.write("</p>\n");
-        out.write("            </div>\n");
-        out.write("        ");
-        int evalDoAfterBody = _jspx_th_c_if_0.doAfterBody();
-        if (evalDoAfterBody != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)
-          break;
-      } while (true);
-    }
-    if (_jspx_th_c_if_0.doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {
-      _jspx_tagPool_c_if_test.reuse(_jspx_th_c_if_0);
-      return true;
-    }
-    _jspx_tagPool_c_if_test.reuse(_jspx_th_c_if_0);
-    return false;
   }
 }
